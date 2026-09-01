@@ -3,12 +3,15 @@ import react from "@vitejs/plugin-react";
 
 const entryInjector = {
   name: "zero-lvgl-entry",
-  transformIndexHtml() {
-    return [{
-      tag: "script",
-      attrs: { type: "module", src: "/src/main.tsx" },
-      injectTo: "body",
-    }];
+  transformIndexHtml: {
+    order: "pre",
+    handler() {
+      return [{
+        tag: "script",
+        attrs: { type: "module", src: "/src/main.tsx" },
+        injectTo: "body",
+      }];
+    },
   },
 };
 
