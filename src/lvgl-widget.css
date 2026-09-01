@@ -65,8 +65,8 @@ button:active { opacity: .8; }
 }
 .lv-screen-body::-webkit-scrollbar { display: none; }
 
-/* ── Generic object ──────────────────────────────────────────────────────── */
-.lv-obj {
+/* ── Generic box ──────────────────────────────────────────────────────────── */
+.lv-box {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -522,7 +522,7 @@ button:active { opacity: .8; }
    Bulma is loaded before this stylesheet. These rules let its design
    primitives compose cleanly with the LVGL widget defaults. */
 .lv-screen .columns,
-.lv-obj.columns {
+.lv-box.columns {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -534,30 +534,30 @@ button:active { opacity: .8; }
   background: transparent;
 }
 .lv-screen .columns.is-multiline,
-.lv-obj.columns.is-multiline { flex-wrap: wrap; }
+.lv-box.columns.is-multiline { flex-wrap: wrap; }
 .lv-screen .column,
-.lv-obj.column {
+.lv-box.column {
   flex: 1 1 0;
   min-width: 0;
   margin: 0;
 }
-.lv-obj.column { padding: 10px; }
-.lv-obj.box {
+.lv-box.column { padding: 10px; }
+.lv-box.box {
   background: rgba(18,18,31,.88);
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,.22);
 }
-.lv-obj.notification {
+.lv-box.notification {
   border: 0;
   border-radius: 12px;
   padding: 12px;
 }
-.lv-obj.is-primary { background: linear-gradient(135deg,#2160c4,#3e8ed0); }
-.lv-obj.is-link { background: linear-gradient(135deg,#485fc7,#6f7ce8); }
-.lv-obj.is-success { background: linear-gradient(135deg,#16855b,#48c78e); }
-.lv-obj.is-warning { background: linear-gradient(135deg,#9d7412,#ffe08a); }
-.lv-obj.is-danger { background: linear-gradient(135deg,#a83246,#f14668); }
+.lv-box.is-primary { background: linear-gradient(135deg,#2160c4,#3e8ed0); }
+.lv-box.is-link { background: linear-gradient(135deg,#485fc7,#6f7ce8); }
+.lv-box.is-success { background: linear-gradient(135deg,#16855b,#48c78e); }
+.lv-box.is-warning { background: linear-gradient(135deg,#9d7412,#ffe08a); }
+.lv-box.is-danger { background: linear-gradient(135deg,#a83246,#f14668); }
 .lv-label.title {
   color: var(--lv-text);
   font-weight: 800;
@@ -613,6 +613,6 @@ button:active { opacity: .8; }
 
 @media (max-width: 420px) {
   .lv-screen .columns,
-  .lv-obj.columns { gap: 8px; }
-  .lv-obj.column { padding: 8px; }
+  .lv-box.columns { gap: 8px; }
+  .lv-box.column { padding: 8px; }
 }
