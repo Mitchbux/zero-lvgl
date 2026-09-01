@@ -19,9 +19,9 @@ screen (
   w "390px",
   h "680px",
 
-  obj (
+  box (
     style "columns",
-    obj (
+    box (
       style "column",
       color "transparent",
       border "0",
@@ -30,7 +30,7 @@ screen (
       label ( text "Good morning, Alex", style "title", textcolor "#ffffff", size "26", bold "true" ),
       label ( text "Your creative system is moving.", style "subtitle", textcolor "#91a0c8", size "12" )
     ),
-    obj (
+    box (
       style "column box",
       color "rgba(72,95,199,.18)",
       border "1",
@@ -43,21 +43,21 @@ screen (
   ),
 
   label ( text "This week", textcolor "#7f8db3", size "10", bold "true" ),
-  obj (
+  box (
     style "columns",
-    obj (
+    box (
       style "column box",
       label ( text "12", textcolor "#ffffff", size "24", bold "true" ),
       label ( text "Projects", textcolor "#7f8db3", size "10" ),
       label ( text "+3 this week", style "tag is-success" )
     ),
-    obj (
+    box (
       style "column box",
       label ( text "38h", textcolor "#ffffff", size "24", bold "true" ),
       label ( text "Deep work", textcolor "#7f8db3", size "10" ),
       label ( text "On target", style "tag is-primary" )
     ),
-    obj (
+    box (
       style "column box",
       label ( text "7", textcolor "#ffffff", size "24", bold "true" ),
       label ( text "Reviews", textcolor "#7f8db3", size "10" ),
@@ -65,7 +65,7 @@ screen (
     )
   ),
 
-  obj (
+  box (
     style "box",
     label ( text "Momentum", style "title", textcolor "#ffffff", size "15", bold "true" ),
     chart (
@@ -79,7 +79,7 @@ screen (
     )
   ),
 
-  obj (
+  box (
     style "columns",
     btn (
       id "refresh-dashboard",
@@ -115,7 +115,7 @@ screen (
   h "680px",
 
   label ( text "NORTH / OBJECTS", textcolor "#8b7567", size "10", bold "true" ),
-  obj (
+  box (
     style "box",
     color "#fffaf6",
     border "1",
@@ -123,7 +123,7 @@ screen (
     radius "18",
     shadow "true",
 
-    obj (
+    box (
       color "linear-gradient(145deg,#d8c8b9,#f4ebe4)",
       border "0",
       radius "14",
@@ -132,9 +132,9 @@ screen (
       label ( text "◯", textcolor "#8c6b57", size "108", align "center", w "100%" )
     ),
 
-    obj (
+    box (
       style "columns",
-      obj (
+      box (
         style "column",
         color "transparent",
         border "0",
@@ -153,9 +153,9 @@ screen (
       onchange { lvgl.text('product-status','Finish: '+event.target.value); }
     ),
 
-    obj (
+    box (
       style "columns",
-      obj (
+      box (
         style "column",
         color "transparent",
         border "0",
@@ -174,7 +174,7 @@ screen (
           }
         )
       ),
-      obj (
+      box (
         style "column",
         color "transparent",
         border "0",
@@ -211,9 +211,9 @@ screen (
   w "390px",
   h "680px",
 
-  obj (
+  box (
     style "columns",
-    obj (
+    box (
       style "column",
       color "transparent",
       border "0",
@@ -231,15 +231,15 @@ screen (
     style "is-boxed",
 
     tab (
-      obj (
+      box (
         style "columns",
-        obj (
+        box (
           style "column box",
           label ( text "MRR", textcolor "#7186a9", size "9", bold "true" ),
           label ( id "mrr", text "$42.8k", textcolor "#ffffff", size "20", bold "true" ),
           label ( text "↑ 12.4%", style "tag is-success" )
         ),
-        obj (
+        box (
           style "column box",
           label ( text "ACTIVE", textcolor "#7186a9", size "9", bold "true" ),
           label ( text "1,284", textcolor "#ffffff", size "20", bold "true" ),
@@ -264,7 +264,7 @@ screen (
 
     tab (
       label ( text "Revenue quality", style "title", textcolor "#ffffff", size "15", bold "true" ),
-      obj (
+      box (
         style "box",
         label ( text "Net retention", textcolor "#7186a9", size "10" ),
         arc ( id "retention", value "114", min "0", max "140", color "#7c8cff", w "120", text "114%" ),
@@ -293,9 +293,9 @@ screen (
   w "390px",
   h "680px",
 
-  obj (
+  box (
     style "columns",
-    obj (
+    box (
       style "column",
       color "transparent",
       border "0",
@@ -306,10 +306,10 @@ screen (
     label ( text "ON TRACK", style "tag is-success" )
   ),
 
-  obj (
+  box (
     style "box",
     label ( text "SPRINT PROGRESS", textcolor "#858b9c", size "9", bold "true" ),
-    obj (
+    box (
       style "columns",
       label ( id "sprint-percent", text "68%", textcolor "#ffffff", size "28", bold "true", style "column title" ),
       label ( id "sprint-count", text "17 / 25 tasks", textcolor "#858b9c", size "10", align "right", style "column" )
@@ -318,12 +318,12 @@ screen (
   ),
 
   label ( text "Up next", textcolor "#858b9c", size "10", bold "true" ),
-  obj (
+  box (
     style "box",
-    obj (
+    box (
       style "columns",
       label ( text "01", style "tag is-link" ),
-      obj (
+      box (
         style "column",
         color "transparent",
         border "0",
@@ -345,12 +345,12 @@ screen (
     )
   ),
 
-  obj (
+  box (
     style "box",
-    obj (
+    box (
       style "columns",
       label ( text "02", style "tag is-warning" ),
-      obj (
+      box (
         style "column",
         color "transparent",
         border "0",
@@ -362,12 +362,12 @@ screen (
     )
   ),
 
-  obj (
+  box (
     style "box",
-    obj (
+    box (
       style "columns",
       label ( text "03", style "tag is-primary" ),
-      obj (
+      box (
         style "column",
         color "transparent",
         border "0",
@@ -400,9 +400,9 @@ screen (
   w "390px",
   h "680px",
 
-  obj (
+  box (
     style "columns",
-    obj (
+    box (
       style "column",
       color "transparent",
       border "0",
@@ -419,11 +419,11 @@ screen (
     w "100%",
 
     tab (
-      obj (
+      box (
         style "notification is-primary",
         label ( text "Living room", textcolor "#ffffff", size "15", bold "true" ),
         label ( text "Comfort scene · 3 devices", textcolor "#d8e9ff", size "10" ),
-        obj (
+        box (
           style "columns",
           btn (
             text "Relax",
@@ -437,9 +437,9 @@ screen (
           )
         )
       ),
-      obj (
+      box (
         style "box",
-        obj (
+        box (
           style "columns",
           label ( text "Ambient lights", textcolor "#ffffff", size "12", bold "true", style "column" ),
           led ( id "living-led", color "#ffe08a", checked "true", w "12" )
@@ -460,12 +460,12 @@ screen (
     ),
 
     tab (
-      obj (
+      box (
         style "notification is-link",
         label ( text "Bedroom", textcolor "#ffffff", size "15", bold "true" ),
         label ( text "Sleep scene ready", textcolor "#e0e4ff", size "10" )
       ),
-      obj (
+      box (
         style "box",
         switch (
           text "Bedside lamps",
@@ -488,12 +488,12 @@ screen (
     ),
 
     tab (
-      obj (
+      box (
         style "notification is-success",
         label ( text "Kitchen", textcolor "#ffffff", size "15", bold "true" ),
         label ( text "Everything is secure", textcolor "#ddfff1", size "10" )
       ),
-      obj (
+      box (
         style "box",
         switch (
           text "Counter lights",
@@ -529,7 +529,7 @@ screen (
   label ( text "Make space for one thing.", style "title", textcolor "#ffffff", size "24", bold "true" ),
   label ( text "Notifications are muted until the session ends.", style "subtitle", textcolor "#8e84ad", size "11" ),
 
-  obj (
+  box (
     style "box",
     color "rgba(30,24,55,.82)",
     border "1",
@@ -537,7 +537,7 @@ screen (
     label ( id "timer-mode", text "FOCUS SESSION", textcolor "#9f8be0", size "9", bold "true", align "center", w "100%" ),
     arc ( id "timer-arc", value "75", color "#9b7cff", w "190", text "18:45" ),
     label ( id "timer-copy", text "18 minutes remaining", textcolor "#8e84ad", size "10", align "center", w "100%" ),
-    obj (
+    box (
       style "columns",
       btn (
         id "timer-toggle",
@@ -563,7 +563,7 @@ screen (
   ),
 
   label ( text "SESSION TASKS", textcolor "#6f668a", size "9", bold "true" ),
-  obj (
+  box (
     style "box",
     checkbox (
       text "Polish mobile navigation",
@@ -582,7 +582,7 @@ screen (
     )
   ),
 
-  obj (
+  box (
     style "columns",
     label ( text "3 sessions", style "tag is-primary column" ),
     label ( text "72 min focused", style "tag is-success column" )
@@ -603,9 +603,9 @@ screen (
   w "390px",
   h "680px",
 
-  obj (
+  box (
     style "columns",
-    obj (
+    box (
       style "column",
       color "transparent",
       border "0",
@@ -622,7 +622,7 @@ screen (
     w "100%",
 
     tab (
-      obj (
+      box (
         style "box",
         color "#ffffff",
         label ( text "Display name", textcolor "#56637a", size "10", bold "true" ),
@@ -656,7 +656,7 @@ screen (
     ),
 
     tab (
-      obj (
+      box (
         style "box",
         color "#ffffff",
         switch (
@@ -684,12 +684,12 @@ screen (
     ),
 
     tab (
-      obj (
+      box (
         style "notification is-success",
         label ( text "Account protected", textcolor "#ffffff", size "14", bold "true" ),
         label ( text "Two-factor authentication is active.", textcolor "#ddfff1", size "10" )
       ),
-      obj (
+      box (
         style "box",
         color "#ffffff",
         label ( text "Last sign-in", textcolor "#56637a", size "10", bold "true" ),
@@ -726,29 +726,29 @@ screen (
   label ( text "Bulma × LVGL", style "title", textcolor "#ffffff", size "25", bold "true" ),
   label ( text "Web layout primitives. Embedded UI behavior.", style "subtitle", textcolor "#8b91ad", size "11" ),
 
-  obj (
+  box (
     style "columns",
-    obj (
+    box (
       style "column notification is-primary",
       label ( text "Primary", textcolor "#ffffff", size "13", bold "true" ),
       label ( text "Action", textcolor "#dce8ff", size "10" )
     ),
-    obj (
+    box (
       style "column notification is-success",
       label ( text "Success", textcolor "#ffffff", size "13", bold "true" ),
       label ( text "Positive", textcolor "#e1fff3", size "10" )
     ),
-    obj (
+    box (
       style "column notification is-danger",
       label ( text "Danger", textcolor "#ffffff", size "13", bold "true" ),
       label ( text "Critical", textcolor "#ffe5eb", size "10" )
     )
   ),
 
-  obj (
+  box (
     style "box",
     label ( text "Buttons", textcolor "#8b91ad", size "9", bold "true" ),
-    obj (
+    box (
       style "columns",
       btn (
         text "Primary",
@@ -785,7 +785,7 @@ screen (
     )
   ),
 
-  obj (
+  box (
     style "box",
     label ( text "Data table", textcolor "#8b91ad", size "9", bold "true" ),
     table (
@@ -796,7 +796,7 @@ screen (
     )
   ),
 
-  obj (
+  box (
     style "columns",
     label ( text "is-primary", style "tag is-primary column" ),
     label ( text "is-success", style "tag is-success column" ),
