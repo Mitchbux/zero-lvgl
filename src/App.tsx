@@ -15,7 +15,7 @@ async function render(code: string): Promise<string> {
 
 // ── Syntax highlighter ────────────────────────────────────────────────────────
 const WIDGETS = new Set([
-  "screen","obj","label","btn","imgbtn","checkbox","switch","slider","arc",
+  "screen","box","label","btn","imgbtn","checkbox","switch","slider","arc",
   "bar","dropdown","roller","textarea","list","table","chart","tabview","tab",
   "win","led","spinner","img","msgbox","kb","calendar","colorpicker","gauge",
 ]);
