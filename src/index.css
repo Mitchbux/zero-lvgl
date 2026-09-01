@@ -695,8 +695,8 @@ button:active { opacity: .7; }
   overflow: auto;
 }
 
-/* Generic object */
-.lv-obj {
+/* Generic box */
+.lv-box {
   display: flex;
   flex-direction: column;
   gap: 8px;
