@@ -1,0 +1,618 @@
+/* ── LVGL widget CSS — self-contained, injected into preview iframe ───────── */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; border: none; }
+button:active { opacity: .8; }
+
+:root {
+  --lv-primary:   #4a90e2;
+  --lv-success:   #50fa7b;
+  --lv-warning:   #f1fa8c;
+  --lv-danger:    #ff5555;
+  --lv-purple:    #bd93f9;
+  --lv-pink:      #ff79c6;
+  --lv-cyan:      #8be9fd;
+  --lv-surface:   #12121f;
+  --lv-surface-2: #1a1a30;
+  --lv-surface-3: #222240;
+  --lv-border:    #2a2a4a;
+  --lv-border-2:  #353560;
+  --lv-text:      #e8e8ff;
+  --lv-text-dim:  #8888aa;
+  --lv-muted:     #444466;
+  --lv-radius:    8px;
+  --lv-radius-lg: 12px;
+  --lv-font:      system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --lv-mono:      'SF Mono','Cascadia Mono','Fira Code',ui-monospace,monospace;
+}
+
+/* ── Screen ──────────────────────────────────────────────────────────────── */
+.lv-screen {
+  background: #1a1a2e;
+  border-radius: 20px;
+  box-shadow:
+    0 0 0 1px rgba(221,238,255,.08),
+    0 4px 6px -1px rgba(0,0,0,.3),
+    0 20px 60px -10px rgba(0,0,0,.9);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  transform-origin: center center;
+}
+.lv-screen-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--lv-text-dim);
+  padding: 8px 14px 6px;
+  border-bottom: 1px solid var(--lv-border);
+  background: rgba(255,255,255,.02);
+}
+.lv-screen-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  flex: 1;
+  overflow: hidden;
+  scrollbar-width: none;
+}
+.lv-screen-body::-webkit-scrollbar { display: none; }
+
+/* ── Generic object ──────────────────────────────────────────────────────── */
+.lv-obj {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--lv-surface-2);
+  border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius);
+  padding: 10px;
+}
+
+/* ── Label ───────────────────────────────────────────────────────────────── */
+.lv-label {
+  color: var(--lv-text);
+  font-family: var(--lv-font);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* ── Button ──────────────────────────────────────────────────────────────── */
+.lv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--lv-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--lv-radius);
+  padding: 9px 18px;
+  font-family: var(--lv-font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter .15s, transform .08s, box-shadow .15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  -webkit-user-select: none; user-select: none;
+}
+.lv-btn:hover {
+  filter: brightness(1.12);
+  box-shadow: 0 4px 14px rgba(0,0,0,.35);
+}
+.lv-btn:active {
+  transform: scale(.96);
+  filter: brightness(.95);
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+.lv-btn.lv-btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
+
+/* ── Disabled ────────────────────────────────────────────────────────────── */
+.lv-disabled { opacity: .38; pointer-events: none; }
+
+/* ── Checkbox ────────────────────────────────────────────────────────────── */
+.lv-checkbox {
+  display: flex; align-items: center; gap: 9px;
+  cursor: pointer; user-select: none;
+  color: var(--lv-text); font-size: 13px;
+  transition: opacity .15s;
+}
+.lv-checkbox:active { opacity: .7; }
+.lv-checkbox input[type="checkbox"] { display: none; }
+.lv-checkbox-mark {
+  width: 18px; height: 18px;
+  border: 2px solid var(--lv-border-2);
+  border-radius: 5px;
+  background: var(--lv-surface-2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s, border-color .15s, box-shadow .15s;
+}
+.lv-checkbox input:checked ~ .lv-checkbox-mark {
+  background: var(--lv-primary);
+  border-color: var(--lv-primary);
+  box-shadow: 0 0 0 3px rgba(74,144,226,.2);
+}
+.lv-checkbox input:checked ~ .lv-checkbox-mark::after {
+  content: "✓"; font-size: 11px; color: #fff; font-weight: 700;
+}
+.lv-checkbox-text { flex: 1; line-height: 1.3; }
+
+/* ── Switch ──────────────────────────────────────────────────────────────── */
+.lv-switch {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; user-select: none;
+  color: var(--lv-text); font-size: 13px;
+}
+.lv-switch input { display: none; }
+.lv-switch-track {
+  width: 42px; height: 24px;
+  background: var(--lv-surface-3);
+  border: 2px solid var(--lv-border-2);
+  border-radius: 12px;
+  position: relative;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s;
+  flex-shrink: 0;
+}
+.lv-switch input:checked ~ .lv-switch-track {
+  background: var(--lv-primary);
+  border-color: var(--lv-primary);
+  box-shadow: 0 0 0 3px rgba(74,144,226,.2);
+}
+.lv-switch-thumb {
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute; top: 2px; left: 2px;
+  transition: left .2s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 1px 6px rgba(0,0,0,.5);
+}
+.lv-switch input:checked ~ .lv-switch-track .lv-switch-thumb { left: 20px; }
+.lv-switch-label { flex: 1; line-height: 1.3; }
+
+/* ── Slider ──────────────────────────────────────────────────────────────── */
+.lv-slider-wrap { display: flex; align-items: center; }
+.lv-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 8px; border-radius: 4px;
+  background: var(--lv-surface-3);
+  outline: none; cursor: pointer;
+  accent-color: var(--lv-slider-color, var(--lv-primary));
+}
+.lv-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--lv-slider-color, var(--lv-primary));
+  border: 2px solid rgba(255,255,255,.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  cursor: grab;
+  transition: transform .1s, box-shadow .1s;
+}
+.lv-slider::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+  cursor: grabbing;
+  box-shadow: 0 2px 14px rgba(0,0,0,.6);
+}
+.lv-slider::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--lv-slider-color, var(--lv-primary));
+  border: 2px solid rgba(255,255,255,.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  cursor: grab;
+}
+
+/* ── Arc ─────────────────────────────────────────────────────────────────── */
+.lv-arc { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+
+/* ── Bar ─────────────────────────────────────────────────────────────────── */
+.lv-bar {
+  background: var(--lv-surface-3);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--lv-border);
+}
+.lv-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  min-width: 2px;
+  transition: width .3s cubic-bezier(.4,0,.2,1);
+  background-image: linear-gradient(90deg, rgba(255,255,255,.0) 0%, rgba(255,255,255,.12) 100%);
+}
+.lv-bar-label {
+  position: absolute; right: 7px;
+  font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,.75);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+
+/* ── Dropdown ────────────────────────────────────────────────────────────── */
+.lv-dropdown {
+  background: var(--lv-surface-2); color: var(--lv-text);
+  border: 1px solid var(--lv-border-2); border-radius: var(--lv-radius);
+  padding: 8px 10px; font-family: var(--lv-font); font-size: 13px;
+  cursor: pointer; outline: none;
+  transition: border-color .15s;
+}
+.lv-dropdown:focus { border-color: var(--lv-primary); }
+.lv-dropdown option { background: var(--lv-surface); color: var(--lv-text); }
+
+/* ── Roller ──────────────────────────────────────────────────────────────── */
+.lv-roller {
+  background: var(--lv-surface-2); border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.lv-roller-item {
+  padding: 8px 12px; font-size: 13px; color: var(--lv-text-dim);
+  text-align: center; border-bottom: 1px solid var(--lv-border);
+  cursor: pointer; transition: background .12s;
+}
+.lv-roller-item:last-child { border-bottom: none; }
+.lv-roller-item:hover { background: rgba(255,255,255,.04); }
+.lv-roller-selected {
+  background: rgba(74,144,226,.15);
+  color: var(--lv-text); font-weight: 600;
+}
+
+/* ── Textarea ────────────────────────────────────────────────────────────── */
+.lv-textarea {
+  background: var(--lv-surface-2); color: var(--lv-text);
+  border: 1px solid var(--lv-border-2); border-radius: var(--lv-radius);
+  padding: 9px 10px; font-family: var(--lv-mono); font-size: 13px;
+  resize: vertical; outline: none; line-height: 1.5;
+  transition: border-color .15s;
+}
+.lv-textarea:focus { border-color: var(--lv-primary); }
+.lv-textarea::placeholder { color: var(--lv-muted); }
+
+/* ── List ────────────────────────────────────────────────────────────────── */
+.lv-list {
+  background: var(--lv-surface-2); border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius); overflow: hidden; list-style: none;
+}
+.lv-list-item {
+  padding: 9px 13px; font-size: 13px; color: var(--lv-text);
+  border-bottom: 1px solid var(--lv-border); cursor: pointer;
+  transition: background .12s, color .12s;
+  display: flex; align-items: center; gap: 8px;
+}
+.lv-list-item:last-child { border-bottom: none; }
+.lv-list-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+.lv-list-item:active { background: rgba(74,144,226,.12); }
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+.lv-table {
+  border-collapse: collapse; font-size: 12px;
+  background: var(--lv-surface-2);
+  border-radius: var(--lv-radius); overflow: hidden; width: 100%;
+}
+.lv-th {
+  padding: 8px 10px; text-align: left; color: var(--lv-text-dim);
+  font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .07em;
+  background: var(--lv-surface); border-bottom: 1px solid var(--lv-border);
+}
+.lv-td {
+  padding: 7px 10px; color: var(--lv-text);
+  border-bottom: 1px solid var(--lv-border);
+}
+.lv-table tr:last-child .lv-td { border-bottom: none; }
+.lv-table tbody tr { transition: background .1s; }
+.lv-table tbody tr:hover { background: rgba(255,255,255,.04); }
+
+/* ── Chart ───────────────────────────────────────────────────────────────── */
+.lv-chart-wrap { display: flex; flex-direction: column; gap: 5px; }
+.lv-chart-title { font-size: 11px; font-weight: 600; color: var(--lv-text-dim); letter-spacing: .04em; }
+.lv-chart {
+  display: block; background: var(--lv-surface-2);
+  border-radius: var(--lv-radius); border: 1px solid var(--lv-border);
+}
+
+/* ── Tabview ─────────────────────────────────────────────────────────────── */
+.lv-tabview {
+  background: var(--lv-surface);
+  border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius-lg);
+  overflow: hidden;
+}
+.lv-tab-headers {
+  display: flex; border-bottom: 1px solid var(--lv-border);
+  background: rgba(0,0,0,.2);
+}
+.lv-tab-header {
+  padding: 9px 16px; font-size: 12px; font-weight: 600;
+  color: var(--lv-text-dim); letter-spacing: .02em;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  user-select: none; transition: color .15s;
+  flex: 1; text-align: center;
+}
+.lv-tab-header:hover { color: var(--lv-text); }
+.lv-tab-active {
+  color: var(--lv-primary) !important;
+  border-bottom-color: var(--lv-primary) !important;
+}
+.lv-tab-body { display: none; padding: 12px; flex-direction: column; gap: 8px; }
+.lv-tab-body-active { display: flex; }
+.lv-tab-bodies { background: var(--lv-surface-2); }
+
+/* ── Window ──────────────────────────────────────────────────────────────── */
+.lv-win {
+  background: var(--lv-surface); border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius-lg); overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,.4);
+}
+.lv-win-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; background: rgba(0,0,0,.15);
+  border-bottom: 1px solid var(--lv-border);
+}
+.lv-win-title { font-size: 13px; font-weight: 600; color: var(--lv-text); }
+.lv-win-close {
+  font-size: 12px; color: var(--lv-text-dim); cursor: pointer;
+  padding: 3px 7px; border-radius: 4px;
+  transition: background .12s, color .12s;
+}
+.lv-win-close:hover { background: rgba(255,85,85,.18); color: var(--lv-danger); }
+.lv-win-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ── LED ─────────────────────────────────────────────────────────────────── */
+.lv-led {
+  border-radius: 50%;
+  background: var(--lv-muted);
+  display: inline-block;
+  transition: background .25s, box-shadow .25s;
+}
+.lv-led-on {
+  background: var(--lv-led-color, var(--lv-success));
+  box-shadow:
+    0 0 6px 2px var(--lv-led-color, var(--lv-success)),
+    0 0 16px 4px color-mix(in srgb, var(--lv-led-color, var(--lv-success)) 40%, transparent);
+}
+
+/* ── Spinner ─────────────────────────────────────────────────────────────── */
+.lv-spinner {
+  border: 3px solid var(--lv-surface-3);
+  border-top: 3px solid var(--lv-primary);
+  border-radius: 50%;
+  animation: lv-spin .65s cubic-bezier(.4,0,.2,1) infinite;
+  display: inline-block;
+  box-shadow: 0 0 8px rgba(74,144,226,.25);
+}
+@keyframes lv-spin { to { transform: rotate(360deg); } }
+
+/* ── Image ───────────────────────────────────────────────────────────────── */
+.lv-img { display: block; object-fit: cover; border-radius: var(--lv-radius); }
+
+/* ── Message box ─────────────────────────────────────────────────────────── */
+.lv-msgbox {
+  background: var(--lv-surface); border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius-lg); overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
+}
+.lv-msgbox-title {
+  padding: 13px 16px 9px; font-size: 15px; font-weight: 700;
+  color: var(--lv-text); border-bottom: 1px solid var(--lv-border);
+}
+.lv-msgbox-body {
+  padding: 12px 16px; font-size: 13px; color: var(--lv-text-dim); line-height: 1.55;
+}
+.lv-msgbox-btns {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: 10px 14px; background: rgba(0,0,0,.12);
+}
+
+/* ── Keyboard ────────────────────────────────────────────────────────────── */
+.lv-kb {
+  background: var(--lv-surface); border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius); padding: 8px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.lv-kb-row { display: flex; justify-content: center; gap: 4px; }
+.lv-kb-key {
+  background: var(--lv-surface-2); color: var(--lv-text);
+  border: 1px solid var(--lv-border-2); border-radius: 5px;
+  padding: 7px 10px; font-size: 12px; cursor: pointer;
+  min-width: 28px; text-align: center;
+  transition: background .1s, transform .07s;
+  box-shadow: 0 2px 0 var(--lv-border);
+}
+.lv-kb-key:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--lv-border);
+}
+.lv-kb-space { flex: 1; }
+
+/* ── Calendar ────────────────────────────────────────────────────────────── */
+.lv-calendar {
+  background: var(--lv-surface); border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius-lg); overflow: hidden;
+}
+.lv-cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--lv-border);
+  background: rgba(0,0,0,.15);
+}
+.lv-cal-month { font-size: 13px; font-weight: 700; color: var(--lv-text); }
+.lv-cal-arrow {
+  font-size: 16px; color: var(--lv-text-dim); cursor: pointer;
+  padding: 2px 6px; border-radius: 4px;
+  transition: background .12s, color .12s;
+}
+.lv-cal-arrow:hover { background: rgba(255,255,255,.07); color: var(--lv-text); }
+.lv-cal-table { width: 100%; border-collapse: collapse; padding: 6px; }
+.lv-cal-day {
+  padding: 6px 0; text-align: center;
+  font-size: 10px; font-weight: 700; color: var(--lv-muted); text-transform: uppercase;
+}
+.lv-cal-num {
+  padding: 5px 0; text-align: center; font-size: 12px;
+  color: var(--lv-text-dim); cursor: pointer; border-radius: 50%;
+  transition: background .1s, color .1s;
+}
+.lv-cal-num:hover { background: rgba(255,255,255,.07); color: var(--lv-text); }
+.lv-cal-today {
+  background: var(--lv-primary) !important;
+  color: #fff !important; font-weight: 700; border-radius: 50%;
+  box-shadow: 0 0 8px rgba(74,144,226,.5);
+}
+
+/* ── Colour picker ───────────────────────────────────────────────────────── */
+.lv-colorpicker { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.lv-cp-wheel { box-shadow: 0 0 0 2px var(--lv-border-2), 0 4px 16px rgba(0,0,0,.4); border-radius: 50%; }
+.lv-cp-cursor {
+  position: absolute; width: 16px; height: 16px;
+  border-radius: 50%; border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.6);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
+
+/* ── Gauge ───────────────────────────────────────────────────────────────── */
+.lv-gauge { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.lv-gauge-track {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 135deg, var(--lv-surface-3) 0deg, var(--lv-surface-3) 270deg, transparent 270deg);
+  border: 3px solid var(--lv-border-2);
+}
+.lv-gauge-needle {
+  position: absolute; bottom: 50%; left: calc(50% - 2px);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 45% solid var(--lv-primary);
+  transform-origin: bottom center;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
+}
+.lv-gauge-center {
+  position: relative; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 2;
+  background: var(--lv-surface);
+  border-radius: 50%; width: 50%; height: 50%;
+  box-shadow: 0 0 0 2px var(--lv-border);
+}
+.lv-gauge-val   { font-size: 16px; font-weight: 700; color: var(--lv-text); }
+.lv-gauge-label { font-size: 10px; color: var(--lv-text-dim); font-weight: 600; letter-spacing: .04em; }
+
+/* ── Utility ─────────────────────────────────────────────────────────────── */
+.lv-muted { color: var(--lv-text-dim); font-style: italic; font-size: 12px; }
+.lv-empty, .lv-error {
+  color: var(--lv-text-dim); font-size: 13px; padding: 24px; text-align: center;
+  background: var(--lv-surface); border: 1px dashed var(--lv-border);
+  border-radius: var(--lv-radius); width: 100%;
+}
+.lv-error { color: var(--lv-danger); border-color: rgba(255,85,85,.3); }
+
+/* ── Global scrollbar ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--lv-border-2); border-radius: 2px; }
+* { scrollbar-width: thin; scrollbar-color: var(--lv-border-2) transparent; }
+
+/* ── Bulma bridge ──────────────────────────────────────────────────────────
+   Bulma is loaded before this stylesheet. These rules let its design
+   primitives compose cleanly with the LVGL widget defaults. */
+.lv-screen .columns,
+.lv-obj.columns {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 10px;
+  margin: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.lv-screen .columns.is-multiline,
+.lv-obj.columns.is-multiline { flex-wrap: wrap; }
+.lv-screen .column,
+.lv-obj.column {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+}
+.lv-obj.column { padding: 10px; }
+.lv-obj.box {
+  background: rgba(18,18,31,.88);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+}
+.lv-obj.notification {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px;
+}
+.lv-obj.is-primary { background: linear-gradient(135deg,#2160c4,#3e8ed0); }
+.lv-obj.is-link { background: linear-gradient(135deg,#485fc7,#6f7ce8); }
+.lv-obj.is-success { background: linear-gradient(135deg,#16855b,#48c78e); }
+.lv-obj.is-warning { background: linear-gradient(135deg,#9d7412,#ffe08a); }
+.lv-obj.is-danger { background: linear-gradient(135deg,#a83246,#f14668); }
+.lv-label.title {
+  color: var(--lv-text);
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1.12;
+  margin: 0;
+}
+.lv-label.subtitle {
+  color: var(--lv-text-dim);
+  line-height: 1.35;
+  margin: 0;
+}
+.lv-label.tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  width: auto;
+  min-height: 22px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--lv-surface-3);
+  color: var(--lv-text);
+  font-size: 10px !important;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.lv-label.tag.is-primary { background: #2160c4; color: #fff; }
+.lv-label.tag.is-link { background: #485fc7; color: #fff; }
+.lv-label.tag.is-success { background: #16855b; color: #fff; }
+.lv-label.tag.is-warning { background: #ffe08a; color: #563d00; }
+.lv-label.tag.is-danger { background: #f14668; color: #fff; }
+.lv-btn.button {
+  min-height: 36px;
+  border: 0;
+}
+.lv-btn.button.is-primary { background: #2160c4 !important; color: #fff !important; }
+.lv-btn.button.is-link { background: #485fc7 !important; color: #fff !important; }
+.lv-btn.button.is-success { background: #16855b !important; color: #fff !important; }
+.lv-btn.button.is-warning { background: #ffe08a !important; color: #563d00 !important; }
+.lv-btn.button.is-danger { background: #f14668 !important; color: #fff !important; }
+.lv-btn.button.is-light { background: #f5f5f5 !important; color: #363636 !important; }
+.lv-btn.button.is-dark { background: #2f2f46 !important; color: #fff !important; }
+.lv-btn.button.is-small { min-height: 30px; height: 30px; padding: 5px 11px; font-size: 11px; }
+.lv-btn.button.is-rounded { border-radius: 999px !important; }
+.lv-btn.button.is-fullwidth { width: 100% !important; }
+.lv-table.table {
+  color: var(--lv-text);
+  background: transparent;
+}
+.lv-table.table.is-striped tbody tr:nth-child(even) { background: rgba(255,255,255,.035); }
+.lv-table.table.is-hoverable tbody tr:hover { background: rgba(74,144,226,.09); }
+.lv-textarea.textarea { color: var(--lv-text); }
+
+@media (max-width: 420px) {
+  .lv-screen .columns,
+  .lv-obj.columns { gap: 8px; }
+  .lv-obj.column { padding: 8px; }
+}
