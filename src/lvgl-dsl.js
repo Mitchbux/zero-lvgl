@@ -8,7 +8,7 @@
  *
  * Supported component types (mirrors lv_binding_js widget set):
  *   screen   — root container / display surface
- *   obj      — generic container / panel
+ *   box      — generic container / panel
  *   label    — text label
  *   btn      — push button
  *   imgbtn   — image button
@@ -109,7 +109,7 @@ function extractEventCode(nodeKey) {
 
 // ── Object types recognised by the Zero DSL parser ───────────────────────────
 export const LVGL_OBJECT_TYPES = new Set([
-  "screen", "obj", "label", "btn", "imgbtn",
+  "screen", "box", "label", "btn", "imgbtn",
   "checkbox", "switch", "slider", "arc", "bar",
   "dropdown", "roller", "textarea", "list", "table",
   "chart", "tabview", "tab", "win", "led",
@@ -647,7 +647,7 @@ function renderGauge(key) {
   </div>`;
 }
 
-function renderObj(key) {
+function renderBox(key) {
   const color  = prop(key + ".color");
   const w      = dim(prop(key + ".w"));
   const h      = dim(prop(key + ".h"));
@@ -668,7 +668,7 @@ function renderObj(key) {
     display: hidden ? "none" : null,
   });
   const inner = renderChildren(key);
-  return `<div class="lv-obj ${extra}" style="${st}">${inner}</div>`;
+  return `<div class="lv-box ${extra}" style="${st}">${inner}</div>`;
 }
 
 // ── Dispatcher ────────────────────────────────────────────────────────────────
@@ -699,7 +699,7 @@ const RENDERERS = {
   calendar:    renderCalendar,
   colorpicker: renderColorpicker,
   gauge:       renderGauge,
-  obj:         renderObj,
+  box:         renderBox,
 };
 
 /**
