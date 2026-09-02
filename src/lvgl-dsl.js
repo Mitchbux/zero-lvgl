@@ -63,6 +63,9 @@
  *   data       — comma-separated y-values for chart
  *   charttype  — "line" | "bar" | "scatter"
  *   tabs       — comma-separated tab labels for tabview
+ *   datelabel  — label id updated by native calendar date selection
+ *   selectedcolor — initial selected-day color for calendar
+ *   bindcalendar — calendar id controlled by a colorpicker
  *   style      — extra CSS class names
  *   note       — ignored by renderer (developer comment)
  */
@@ -177,6 +180,11 @@ function esc(s) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/** Escape a value embedded in a single-quoted generated runtime string. */
+function jsString(s) {
+  return String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
 }
 
 // ── Walk helpers ──────────────────────────────────────────────────────────────
@@ -592,7 +600,8 @@ function renderKb(key) {
 function renderCalendar(key) {
   const w = dim(prop(key + ".w"), "280px");
   const id = mkId(key, "calendar");
-  queueEvent(id, "click", extractEventCode(key + ".onclick"));
+  const dateLabel = prop(key + ".datelabel");
+  const selectedColor = prop(key + ".selectedcolor") ?? "#4a90e2";
   const today = new Date();
   const month = today.toLocaleString("default", { month: "long" });
   const year  = today.getFullYear();
@@ -603,13 +612,28 @@ function renderCalendar(key) {
   let cells = Array(firstDay).fill(`<td></td>`);
   for (let i = 1; i <= daysInMonth; i++) {
     const active = i === today.getDate() ? " lv-cal-today lv-cal-selected" : "";
-    cells.push(`<td class="lv-cal-num${active}" data-day="${i}">${i}</td>`);
+    const date = `${year}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+    cells.push(`<td class="lv-cal-num${active}" data-day="${i}" data-date="${date}">${i}</td>`);
   }
+  queueEvent(id, "click", `
+    var day=event.target.closest('.lv-cal-num');if(!day)return;
+    event.currentTarget.querySelectorAll('.lv-cal-selected').forEach(function(cell){
+      cell.classList.remove('lv-cal-selected');
+      cell.style.removeProperty('background');
+      cell.style.removeProperty('color');
+      cell.style.removeProperty('box-shadow');
+    });
+    day.classList.add('lv-cal-selected');
+    ${dateLabel ? `lvgl.text('${jsString(dateLabel)}',day.dataset.date);` : ""}
+    var source=document.querySelector('[data-bind-calendar="${jsString(id)}"]');
+    if(source)lvgl.calendarDayColor('${jsString(id)}',source.value);
+  `);
+  queueEvent(id, "click", extractEventCode(key + ".onclick"));
   while (cells.length % 7 !== 0) cells.push(`<td></td>`);
   const rows = [];
   for (let i = 0; i < cells.length; i += 7)
     rows.push(`<tr>${cells.slice(i, i+7).join("")}</tr>`);
-  return `<div id="lvgl-${id}" class="lv-calendar" style="width:${w}">
+  return `<div id="lvgl-${id}" class="lv-calendar" style="width:${w};--lv-selected-color:${esc(selectedColor)}">
     <div class="lv-cal-header">
       <span class="lv-cal-arrow">‹</span>
       <span class="lv-cal-month">${month} ${year}</span>
@@ -623,6 +647,13 @@ function renderColorpicker(key) {
   const size  = int(prop(key + ".w"), 120);
   const color = prop(key + ".color") ?? "#4a90e2";
   const id = mkId(key, "colorpicker");
+  const bindCalendar = prop(key + ".bindcalendar");
+  if (bindCalendar) {
+    queueEvent(id + "-input", "input", `
+      lvgl.colorpicker('${jsString(id)}',event.target.value);
+      lvgl.calendarDayColor('${jsString(bindCalendar)}',event.target.value);
+    `);
+  }
   queueEvent(
     id + "-input",
     "input",
@@ -633,7 +664,7 @@ function renderColorpicker(key) {
       background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);
       border-radius:50%;"></div>
     <div class="lv-cp-cursor" style="background:${color}"></div>
-    <input id="lvgl-${id}-input" class="lv-cp-input" type="color" value="${esc(color)}" aria-label="Choose a color">
+    <input id="lvgl-${id}-input" class="lv-cp-input" type="color" value="${esc(color)}"${bindCalendar ? ` data-bind-calendar="${esc(bindCalendar)}"` : ""} aria-label="Choose a color">
   </div>`;
 }
 
