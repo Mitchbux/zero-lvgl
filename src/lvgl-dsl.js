@@ -830,7 +830,6 @@ function buildFullDoc(bodyHtml, script) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
 <style>
 html,body{height:100%;overflow:hidden;}
 body{margin:0;padding:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;overflow:hidden;}
