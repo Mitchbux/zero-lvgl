@@ -32,7 +32,8 @@ const PROPS = new Set([
   "text","value","min","max","w","h","x","y","color","textcolor","checked",
   "disabled","hidden","radius","border","bordercolor","shadow","opacity","align",
   "pad","src","options","cols","rows","data","charttype","tabs","style","note",
-  "size","bold","placeholder","body","buttons","type",
+  "size","bold","placeholder","body","buttons","type","datelabel","selectedcolor",
+  "bindcalendar",
 ]);
 
 function highlight(raw: string): string {
