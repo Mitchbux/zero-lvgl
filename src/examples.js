@@ -716,7 +716,7 @@ screen (
     label: "◈ Calendar Color Studio",
     description: "Select a calendar day, then use the color picker to paint its highlight.",
     code: `# Calendar color studio
-# Click a day to select it, then drag the color wheel or open the native picker.
+# Native calendar selection and color-wheel binding; no event script is needed.
 screen (
   color "linear-gradient(145deg,#111827 0%,#1f2937 58%,#0f172a 100%)",
   w "390px",
@@ -732,15 +732,8 @@ screen (
     calendar (
       id "agenda-calendar",
       w "100%",
-      onclick {
-        var day=event.target.closest('.lv-cal-num');
-        if(!day)return;
-        document.querySelectorAll('#lvgl-agenda-calendar .lv-cal-selected').forEach(function(cell){cell.classList.remove('lv-cal-selected');});
-        day.classList.add('lv-cal-selected');
-        lvgl.text('selected-day','Day '+day.dataset.day+' selected');
-        var color=document.getElementById('lvgl-agenda-color-input').value;
-        lvgl.calendarDayColor('agenda-calendar',color);
-      }
+      datelabel "selected-day",
+      selectedcolor "#ff6b9d"
     )
   ),
 
@@ -753,25 +746,17 @@ screen (
         id "agenda-color",
         color "#ff6b9d",
         w "112",
-        oninput {
-          var color=event.target.value;
-          lvgl.colorpicker('agenda-color',color);
-          lvgl.calendarDayColor('agenda-calendar',color);
-          lvgl.text('color-value',color.toUpperCase());
-        }
+        bindcalendar "agenda-calendar"
       ),
-      label ( id "color-value", text "#FF6B9D", textcolor "#ffffff", size "12", bold "true", align "center", w "100%" )
+      label ( text "Native LVGL color wheel", textcolor "#ffffff", size "11", bold "true", align "center", w "100%" )
     ),
     box (
       style "column box",
       label ( text "SELECTED DAY", textcolor "#8ea1c4", size "9", bold "true" ),
-      label ( id "selected-day", text "Today selected", textcolor "#ffffff", size "16", bold "true" ),
-      label ( text "The highlight follows your chosen color.", textcolor "#a8b5cf", size "10" ),
-      label ( text "Click any date to move the color.", style "tag is-primary" )
+      label ( id "selected-day", text "Select a date", textcolor "#ffffff", size "16", bold "true" ),
+      label ( text "The highlight follows your chosen color.", textcolor "#a8b5cf", size "10" )
     )
-  ),
-
-  label ( text "Tip: the color input opens the native picker on desktop and mobile.", textcolor "#71809f", size "10", align "center", w "100%" )
+  )
 )
 `,
   },
