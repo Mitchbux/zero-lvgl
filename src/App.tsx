@@ -223,6 +223,7 @@ export default function App() {
   const [tab, setTab]           = useState<Tab>("preview");
   const [btnGroup, setBtnGroup] = useState(0);
   const [copying, setCopying]   = useState(false);
+  const [htmlStatus, setHtmlStatus] = useState<"" | "saved" | "error">("");
   const [cStatus, setCStatus]    = useState<"" | "copying" | "copied" | "saved" | "error">("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const preRef      = useRef<HTMLPreElement>(null);
@@ -264,6 +265,22 @@ export default function App() {
       setCopying(true);
       setTimeout(() => setCopying(false), 1800);
     });
+  };
+
+  const downloadHtml = () => {
+    try {
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${active || "zero-app"}.html`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      setHtmlStatus("saved");
+      setTimeout(() => setHtmlStatus(""), 1800);
+    } catch {
+      setHtmlStatus("error");
+    }
   };
 
   const copyC = async () => {
@@ -358,9 +375,14 @@ export default function App() {
             {cStatus === "saved" ? "✓ saved" : "download .c"}
           </button>
           {tab === "preview" && html && (
+            <>
+            <button className="action-btn action-run" onClick={downloadHtml}>
+              {htmlStatus === "saved" ? "✓ saved" : htmlStatus === "error" ? "HTML error" : "download HTML"}
+            </button>
             <button className="action-btn" onClick={copyHtml}>
               {copying ? "✓ copied" : "copy html"}
             </button>
+            </>
           )}
           {tab === "edit" && (
             <button className="action-btn action-run" onClick={() => { runRender(code); setTab("preview"); }}>
