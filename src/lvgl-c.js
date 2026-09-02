@@ -322,10 +322,10 @@ function compileNode(ctx, type, key, parent) {
     }
   } else if (type === "dropdown") {
     lines.push(`  lv_obj_t *${variable} = lv_dropdown_create(${parent});`);
-    lines.push(`  lv_dropdown_set_options(${variable}, "${cString(splitEscaped(prop(key, "options")).join("\\n"))}");`);
+    lines.push(`  lv_dropdown_set_options(${variable}, "${cString(splitEscaped(prop(key, "options")).join("\n"))}");`);
   } else if (type === "roller") {
     lines.push(`  lv_obj_t *${variable} = lv_roller_create(${parent});`);
-    lines.push(`  lv_roller_set_options(${variable}, "${cString(splitEscaped(prop(key, "options")).join("\\n"))}", LV_ROLLER_MODE_NORMAL);`);
+    lines.push(`  lv_roller_set_options(${variable}, "${cString(splitEscaped(prop(key, "options")).join("\n"))}", LV_ROLLER_MODE_NORMAL);`);
   } else if (type === "textarea") {
     lines.push(`  lv_obj_t *${variable} = lv_textarea_create(${parent});`);
     if (prop(key, "placeholder")) lines.push(`  lv_textarea_set_placeholder_text(${variable}, "${cString(prop(key, "placeholder"))}");`);
