@@ -712,6 +712,71 @@ screen (
   },
 
   {
+    id: "calendar-color",
+    label: "◈ Calendar Color Studio",
+    description: "Select a calendar day, then use the color picker to paint its highlight.",
+    code: `# Calendar color studio
+# Click a day to select it, then drag the color wheel or open the native picker.
+screen (
+  color "linear-gradient(145deg,#111827 0%,#1f2937 58%,#0f172a 100%)",
+  w "390px",
+  h "680px",
+
+  label ( text "PLANNER / COLOR STUDIO", style "tag is-link" ),
+  label ( text "Paint your schedule", style "title", textcolor "#ffffff", size "24", bold "true" ),
+  label ( text "Choose a day and give it a color.", style "subtitle", textcolor "#a8b5cf", size "11" ),
+
+  box (
+    style "box",
+    label ( text "SCHEDULE", textcolor "#8ea1c4", size "9", bold "true" ),
+    calendar (
+      id "agenda-calendar",
+      w "100%",
+      onclick {
+        var day=event.target.closest('.lv-cal-num');
+        if(!day)return;
+        document.querySelectorAll('#lvgl-agenda-calendar .lv-cal-selected').forEach(function(cell){cell.classList.remove('lv-cal-selected');});
+        day.classList.add('lv-cal-selected');
+        lvgl.text('selected-day','Day '+day.dataset.day+' selected');
+        var color=document.getElementById('lvgl-agenda-color-input').value;
+        lvgl.calendarDayColor('agenda-calendar',color);
+      }
+    )
+  ),
+
+  box (
+    style "columns",
+    box (
+      style "column box",
+      label ( text "DAY COLOR", textcolor "#8ea1c4", size "9", bold "true" ),
+      colorpicker (
+        id "agenda-color",
+        color "#ff6b9d",
+        w "112",
+        oninput {
+          var color=event.target.value;
+          lvgl.colorpicker('agenda-color',color);
+          lvgl.calendarDayColor('agenda-calendar',color);
+          lvgl.text('color-value',color.toUpperCase());
+        }
+      ),
+      label ( id "color-value", text "#FF6B9D", textcolor "#ffffff", size "12", bold "true", align "center", w "100%" )
+    ),
+    box (
+      style "column box",
+      label ( text "SELECTED DAY", textcolor "#8ea1c4", size "9", bold "true" ),
+      label ( id "selected-day", text "Today selected", textcolor "#ffffff", size "16", bold "true" ),
+      label ( text "The highlight follows your chosen color.", textcolor "#a8b5cf", size "10" ),
+      label ( text "Click any date to move the color.", style "tag is-primary" )
+    )
+  ),
+
+  label ( text "Tip: the color input opens the native picker on desktop and mobile.", textcolor "#71809f", size "10", align "center", w "100%" )
+)
+`,
+  },
+
+  {
     id: "bulma-lab",
     label: "◆ Bulma + LVGL Lab",
     description: "A compact reference showing how Bulma utilities compose with interactive LVGL widgets.",
