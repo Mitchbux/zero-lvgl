@@ -466,6 +466,11 @@ button:active { opacity: .8; }
   color: #fff !important; font-weight: 700; border-radius: 50%;
   box-shadow: 0 0 8px rgba(74,144,226,.5);
 }
+.lv-cal-selected {
+  background: var(--lv-selected-color, var(--lv-primary)) !important;
+  color: #fff !important; font-weight: 700; border-radius: 50%;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--lv-selected-color, var(--lv-primary)) 60%, transparent);
+}
 
 /* ── Colour picker ───────────────────────────────────────────────────────── */
 .lv-colorpicker { position: relative; display: inline-flex; align-items: center; justify-content: center; }
