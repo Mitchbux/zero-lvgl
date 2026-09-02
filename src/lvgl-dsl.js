@@ -156,6 +156,14 @@ function dim(v, fallback = null) {
   return isNaN(n) ? fallback : n + "px";
 }
 
+/** Split newline-delimited values after Zero has decoded quoted \n escapes. */
+function splitValues(v) {
+  return String(v ?? "")
+    .split(/\\n|\n/)
+    .map(value => value.trim())
+    .filter(Boolean);
+}
+
 /** Build an inline style object (keys→values, nulls skipped). */
 function style(obj) {
   return Object.entries(obj)
@@ -363,7 +371,7 @@ function renderBar(key) {
 }
 
 function renderDropdown(key) {
-  const options  = (prop(key + ".options") ?? "Option 1\nOption 2\nOption 3").split("\\n");
+  const options  = splitValues(prop(key + ".options") ?? "Option 1\nOption 2\nOption 3");
   const selected = int(prop(key + ".value"), 0);
   const w        = dim(prop(key + ".w"), "160px");
   const disabled = prop(key + ".disabled") === "true";
@@ -376,7 +384,7 @@ function renderDropdown(key) {
 }
 
 function renderRoller(key) {
-  const options = (prop(key + ".options") ?? "Item 1\nItem 2\nItem 3").split("\\n");
+  const options = splitValues(prop(key + ".options") ?? "Item 1\nItem 2\nItem 3");
   const selected = int(prop(key + ".value"), 0);
   const w = dim(prop(key + ".w"), "120px");
   return `<div class="lv-roller" style="width:${w}">
@@ -406,7 +414,7 @@ function renderList(key) {
   const optionsRaw = prop(key + ".options");
   let items = [];
   if (optionsRaw) {
-    items = optionsRaw.split("\\n").map(o => o.trim()).filter(Boolean);
+    items = splitValues(optionsRaw);
   } else {
     const itemKey = key + ".item";
     const n = Z(itemKey);
