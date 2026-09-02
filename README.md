@@ -235,6 +235,8 @@ The built-in browser helper is exposed as `lvgl`:
 | `lvgl.tab(tabview, index)` | Activate a tab by index. `tabview` may be an element or an `id`; if omitted, the first tabview is used. |
 | `lvgl.count(key[, delta])` | Increment and return a small browser-side counter. |
 
+The browser runtime also exposes `lvgl.state` for arbitrary state values and `lvgl._c` for the counter values maintained by `lvgl.count()`.
+
 `event.target` and `event.currentTarget` are available inside event bodies. Event code is intentionally browser-specific. During C export, ordinary event bodies become compiling callback stubs with TODO comments so they can be translated safely for a target firmware.
 
 ### Declarative calendar and color-wheel binding
