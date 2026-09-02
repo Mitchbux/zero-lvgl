@@ -591,6 +591,8 @@ function renderKb(key) {
 
 function renderCalendar(key) {
   const w = dim(prop(key + ".w"), "280px");
+  const id = mkId(key, "calendar");
+  queueEvent(id, "click", extractEventCode(key + ".onclick"));
   const today = new Date();
   const month = today.toLocaleString("default", { month: "long" });
   const year  = today.getFullYear();
@@ -600,14 +602,14 @@ function renderCalendar(key) {
   const header = days.map(d => `<th class="lv-cal-day">${d}</th>`).join("");
   let cells = Array(firstDay).fill(`<td></td>`);
   for (let i = 1; i <= daysInMonth; i++) {
-    const active = i === today.getDate() ? " lv-cal-today" : "";
-    cells.push(`<td class="lv-cal-num${active}">${i}</td>`);
+    const active = i === today.getDate() ? " lv-cal-today lv-cal-selected" : "";
+    cells.push(`<td class="lv-cal-num${active}" data-day="${i}">${i}</td>`);
   }
   while (cells.length % 7 !== 0) cells.push(`<td></td>`);
   const rows = [];
   for (let i = 0; i < cells.length; i += 7)
     rows.push(`<tr>${cells.slice(i, i+7).join("")}</tr>`);
-  return `<div class="lv-calendar" style="width:${w}">
+  return `<div id="lvgl-${id}" class="lv-calendar" style="width:${w}">
     <div class="lv-cal-header">
       <span class="lv-cal-arrow">‹</span>
       <span class="lv-cal-month">${month} ${year}</span>
@@ -620,11 +622,18 @@ function renderCalendar(key) {
 function renderColorpicker(key) {
   const size  = int(prop(key + ".w"), 120);
   const color = prop(key + ".color") ?? "#4a90e2";
-  return `<div class="lv-colorpicker" style="width:${size}px;height:${size}px">
+  const id = mkId(key, "colorpicker");
+  queueEvent(
+    id + "-input",
+    "input",
+    extractEventCode(key + ".oninput") || extractEventCode(key + ".onchange")
+  );
+  return `<div id="lvgl-${id}" class="lv-colorpicker" style="width:${size}px;height:${size}px">
     <div class="lv-cp-wheel" style="width:${size}px;height:${size}px;
       background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);
       border-radius:50%;"></div>
     <div class="lv-cp-cursor" style="background:${color}"></div>
+    <input id="lvgl-${id}-input" class="lv-cp-input" type="color" value="${esc(color)}" aria-label="Choose a color">
   </div>`;
 }
 
@@ -733,6 +742,20 @@ function buildEventScript() {
     html:function(id,v){var e=document.getElementById('lvgl-'+id);if(e)e.innerHTML=v;},
     bg:function(id,v){var e=document.getElementById('lvgl-'+id);if(e)e.style.background=v;},
     color:function(id,v){var e=document.getElementById('lvgl-'+id);if(e)e.style.color=v;},
+     colorpicker:function(id,v){
+       var e=document.getElementById('lvgl-'+id);if(!e)return;
+       var c=e.querySelector('.lv-cp-cursor');if(c)c.style.background=v;
+       var input=document.getElementById('lvgl-'+id+'-input');if(input)input.value=v;
+     },
+     calendarDayColor:function(id,v){
+       var e=document.getElementById('lvgl-'+id);if(!e)return;
+       var day=e.querySelector('.lv-cal-selected')||e.querySelector('.lv-cal-today');
+       if(day){
+         day.style.setProperty('background',v,'important');
+         day.style.color='#fff';
+         day.style.boxShadow='0 0 8px 3px '+v;
+       }
+     },
     show:function(id,vis){var e=document.getElementById('lvgl-'+id);if(e)e.style.display=vis===false?'none':'';},
     hide:function(id){lvgl.show(id,false);},
     val:function(id,v){
