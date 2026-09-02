@@ -276,6 +276,8 @@ function compileEvent(ctx, variable, key, eventName, lvEvent) {
 
 function compileNode(ctx, type, key, parent) {
   const variable = allocateSymbol(ctx, prop(key, "id"), `${type}_${++ctx.count}`);
+  const publicId = prop(key, "id");
+  if (publicId) ctx.ids.set(publicId, variable);
   const lines = ctx.lines;
   const text = prop(key, "text");
 
@@ -354,15 +356,20 @@ function compileNode(ctx, type, key, parent) {
   } else if (type === "tabview") {
     lines.push(`  lv_obj_t *${variable} = lv_tabview_create(${parent});`);
   } else if (type === "calendar") {
+    const selectedColor = colorInfo(prop(key, "selectedcolor")).primary || "4A90E2";
     lines.push("#if LV_USE_CALENDAR");
     lines.push(`  lv_obj_t *${variable} = lv_calendar_create(${parent});`);
+    lines.push(`  lv_obj_set_style_bg_color(${variable}, lv_color_hex(0x${selectedColor}), LV_PART_ITEMS | LV_STATE_CHECKED);`);
+    lines.push(`  lv_obj_set_style_text_color(${variable}, lv_color_white(), LV_PART_ITEMS | LV_STATE_CHECKED);`);
     lines.push("#else");
     lines.push(`  lv_obj_t *${variable} = lv_label_create(${parent});`);
     lines.push(`  lv_label_set_text(${variable}, "Calendar requires LV_USE_CALENDAR");`);
     lines.push("#endif");
   } else if (type === "colorpicker") {
+    const pickerColor = colorInfo(prop(key, "color")).primary || "4A90E2";
     lines.push("#if LV_USE_COLORWHEEL");
     lines.push(`  lv_obj_t *${variable} = lv_colorwheel_create(${parent}, true);`);
+    lines.push(`  lv_colorwheel_set_rgb(${variable}, lv_color_hex(0x${pickerColor}));`);
     lines.push("#else");
     lines.push(`  lv_obj_t *${variable} = lv_obj_create(${parent});`);
     lines.push("#endif");
@@ -401,6 +408,12 @@ function compileNode(ctx, type, key, parent) {
   compileEvent(ctx, variable, key, "oninput", "LV_EVENT_VALUE_CHANGED");
   compileEvent(ctx, variable, key, "onpress", "LV_EVENT_PRESSED");
   compileEvent(ctx, variable, key, "onrelease", "LV_EVENT_RELEASED");
+  if (type === "calendar" && prop(key, "datelabel")) {
+    ctx.nativeBindings.push({ kind: "calendar-date", source: variable, targetId: prop(key, "datelabel") });
+  }
+  if (type === "colorpicker" && prop(key, "bindcalendar")) {
+    ctx.nativeBindings.push({ kind: "calendar-color", source: variable, targetId: prop(key, "bindcalendar") });
+  }
 
   const childNodes = children(key);
   if (type === "tabview") {
@@ -418,11 +431,61 @@ export function compileToC(dslText) {
   Zero.reset();
   parseScript(dslText, OBJECT_TYPES);
 
-  const ctx = { lines: [], handlers: new Map(), tabLabels: new Map(), symbols: new Set(), count: 0 };
+  const ctx = {
+    lines: [], handlers: new Map(), tabLabels: new Map(), symbols: new Set(),
+    ids: new Map(), nativeBindings: [], count: 0,
+  };
   const roots = children("zero");
   for (const root of roots) compileNode(ctx, root.type, root.instance._name, "parent");
 
-  const handlers = [...ctx.handlers.values()].join("\n\n");
+  const nativeHandlers = [];
+  if (ctx.nativeBindings.some((binding) => binding.kind === "calendar-date")) {
+    nativeHandlers.push(`#if LV_USE_CALENDAR
+static void zero_calendar_date_changed(lv_event_t *event) {
+  lv_obj_t *calendar = lv_event_get_target(event);
+  lv_obj_t *label = lv_event_get_user_data(event);
+  lv_calendar_date_t date;
+  if(label && lv_calendar_get_pressed_date(calendar, &date)) {
+    char value[11];
+    lv_snprintf(value, sizeof(value), "%04u-%02u-%02u",
+                (unsigned)date.year, (unsigned)date.month, (unsigned)date.day);
+    lv_label_set_text(label, value);
+  }
+}
+#endif`);
+  }
+  if (ctx.nativeBindings.some((binding) => binding.kind === "calendar-color")) {
+    nativeHandlers.push(`#if LV_USE_CALENDAR && LV_USE_COLORWHEEL
+static void zero_calendar_color_changed(lv_event_t *event) {
+  lv_obj_t *colorwheel = lv_event_get_target(event);
+  lv_obj_t *calendar = lv_event_get_user_data(event);
+  if(calendar) {
+    lv_color_t color = lv_colorwheel_get_rgb(colorwheel);
+    lv_obj_set_style_bg_color(calendar, color, LV_PART_ITEMS | LV_STATE_CHECKED);
+    lv_obj_set_style_text_color(calendar, lv_color_white(), LV_PART_ITEMS | LV_STATE_CHECKED);
+    lv_obj_invalidate(calendar);
+  }
+}
+#endif`);
+  }
+  for (const binding of ctx.nativeBindings) {
+    const target = ctx.ids.get(binding.targetId);
+    if (!target) {
+      ctx.lines.push(`  /* Binding target "${cComment(binding.targetId)}" was not found. */`);
+      continue;
+    }
+    if (binding.kind === "calendar-date") {
+      ctx.lines.push("#if LV_USE_CALENDAR");
+      ctx.lines.push(`  lv_obj_add_event_cb(${binding.source}, zero_calendar_date_changed, LV_EVENT_VALUE_CHANGED, ${target});`);
+      ctx.lines.push("#endif");
+    } else {
+      ctx.lines.push("#if LV_USE_CALENDAR && LV_USE_COLORWHEEL");
+      ctx.lines.push(`  lv_obj_add_event_cb(${binding.source}, zero_calendar_color_changed, LV_EVENT_VALUE_CHANGED, ${target});`);
+      ctx.lines.push("#endif");
+    }
+  }
+
+  const handlers = [...ctx.handlers.values(), ...nativeHandlers].join("\n\n");
   const dynamicProperties = [...(Zero.storage ?? new Map())]
     .filter(([, node]) => node?._rawCode)
     .map(([key, node]) => `${key}: ${cComment(node._rawCode)}`);
