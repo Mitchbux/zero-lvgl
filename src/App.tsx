@@ -13,6 +13,15 @@ async function render(code: string): Promise<string> {
   return rendererCache(code);
 }
 
+let cCompilerCache: ((code: string) => string) | null = null;
+async function compileC(code: string): Promise<string> {
+  if (!cCompilerCache) {
+    const m = await import("./lvgl-c.js");
+    cCompilerCache = m.compileToC;
+  }
+  return cCompilerCache(code);
+}
+
 // ── Syntax highlighter ────────────────────────────────────────────────────────
 const WIDGETS = new Set([
   "screen","box","label","btn","imgbtn","checkbox","switch","slider","arc",
@@ -214,6 +223,7 @@ export default function App() {
   const [tab, setTab]           = useState<Tab>("preview");
   const [btnGroup, setBtnGroup] = useState(0);
   const [copying, setCopying]   = useState(false);
+  const [cStatus, setCStatus]    = useState<"" | "copying" | "copied" | "saved" | "error">("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const preRef      = useRef<HTMLPreElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -254,6 +264,34 @@ export default function App() {
       setCopying(true);
       setTimeout(() => setCopying(false), 1800);
     });
+  };
+
+  const copyC = async () => {
+    try {
+      setCStatus("copying");
+      await navigator.clipboard.writeText(await compileC(code));
+      setCStatus("copied");
+      setTimeout(() => setCStatus(""), 1800);
+    } catch {
+      setCStatus("error");
+    }
+  };
+
+  const downloadC = async () => {
+    try {
+      const output = await compileC(code);
+      const blob = new Blob([output], { type: "text/x-c;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${active || "zero-ui"}.c`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      setCStatus("saved");
+      setTimeout(() => setCStatus(""), 1800);
+    } catch {
+      setCStatus("error");
+    }
   };
 
   const insertAt = (insert: string) => {
@@ -313,6 +351,12 @@ export default function App() {
           )}
         </div>
         <div className="topbar-actions">
+          <button className="action-btn" onClick={copyC}>
+            {cStatus === "copying" ? "building…" : cStatus === "copied" ? "✓ C copied" : cStatus === "error" ? "C error" : "copy C"}
+          </button>
+          <button className="action-btn action-run" onClick={downloadC}>
+            {cStatus === "saved" ? "✓ saved" : "download .c"}
+          </button>
           {tab === "preview" && html && (
             <button className="action-btn" onClick={copyHtml}>
               {copying ? "✓ copied" : "copy html"}
